@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- Configurações básicas do documento -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gerenciador de Candidaturas</title>
+  <!-- Arquivo de estilos principal -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+  <header role="banner" class="card header">
+    <div class="header-left">
+      <!-- Logo visual da aplicação -->
+      <div class="logo-box" role="img" aria-label="Logo do Gerenciador de Candidaturas">💼</div>
+      <div>
+        <!-- Título principal da página -->
+        <h1 class="title">Gerenciador de Candidaturas</h1>
+        <!-- Descrição da funcionalidade -->
+        <p class="subtitle"> organize e controle suas aplicações</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <!-- Botão para exportar dados em formato JSON -->
+      <button id="export-json-btn" title="Exportar dados em .json">Exportar JSON</button>
+      <!-- Botão para gerar relatório em PDF -->
+      <button id="export-pdf-btn" title="Exportar visual em PDF">Exportar PDF</button>
+      <!-- Botão principal para adicionar nova candidatura -->
+      <button id="add-btn" class="cta-primary">+ Adicionar</button>
+    </div>
+  </header>
+
+  <!-- Conteúdo principal da página -->
+  <main class="container" role="main">
+    <!-- Seção para exibir indicadores (KPIs) -->
+    <section id="kpi-section" aria-live="polite"></section>
+
+    <!-- Barra de ferramentas para busca e filtros -->
+    <section class="toolbar" role="search">
+      <div class="search-container">
+        <!-- Campo de busca por título ou empresa -->
+        <label for="search-input" class="sr-only">Buscar por título ou empresa</label>
+        <input id="search-input" type="text" placeholder="Buscar por título ou empresa..." autocomplete="off" />
+      </div>
+      <div class="filter-group">
+        <!-- Filtro para selecionar status das candidaturas -->
+        <label for="status-filter" class="sr-only">Filtrar por Status</label>
+        <select id="status-filter" aria-label="Filtrar por Status">
+          <option value="">Todos os Status</option>
+          <option>Não Iniciado</option>
+          <option>Em Andamento</option>
+          <option>Aprovado</option>
+          <option>Reprovado</option>
+        </select>
+      </div>
+      <!-- Botão para limpar todos os filtros aplicados -->
+      <button id="clear-filters-btn" class="btn-ghost">Limpar Filtros</button>
+    </section>
+
+    <!-- Seção da lista/tabela de candidaturas -->
+    <section>
+      <div class="table-container">
+        <!-- Tabela principal com as candidaturas -->
+        <table class="application-table" id="application-table" role="grid">
+          <thead>
+            <tr>
+              <!-- Cabeçalhos da tabela com funcionalidade de ordenação -->
+              <th scope="col" class="sortable" data-sort-by="titulo">Título <span class="sort-icon" aria-hidden="true"></span></th>
+              <th scope="col" class="sortable" data-sort-by="empresa">Empresa <span class="sort-icon" aria-hidden="true"></span></th>
+              <th scope="col" class="sortable" data-sort-by="status">Status <span class="sort-icon" aria-hidden="true"></span></th>
+              <!-- Coluna para ações (editar/excluir) -->
+              <th scope="col">ordenar</th>
+            </tr>
+          </thead>
+          <!-- Local onde as candidaturas serão carregadas dinamicamente -->
+          <tbody id="application-table-body"></tbody>
+        </table>
+      </div>
+
+      <!-- Mensagem exibida quando não há candidaturas cadastradas -->
+      <div id="no-applications" class="empty-state">
+        <p>Sem candidaturas ainda. Use o botão “+ Adicionar”.</p>
+      </div>
+    </section>
+
+    <!-- Seção para gerenciamento de dados (backup e reset) -->
+    <section id="backup-section" class="card">
+      <h3>Gerenciamento de Dados</h3>
+      <div class="backup-controls">
+        <!-- Botão para apagar todos os dados salvos no navegador -->
+        <button id="reset-data-btn">Apagar Dados do Navegador</button>
+      </div>
+      <!-- Informação sobre onde os dados são armazenados -->
+      <small class="muted">Os dados são salvos automaticamente no seu navegador.</small>
+    </section>
+  </main>
+
+  <!-- Modal para adicionar/editar candidaturas -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-content">
+      <!-- Botão para fechar o modal -->
+      <button class="close-btn" aria-label="Fechar Modal">&times;</button>
+      <!-- Título do modal -->
+      <h2 id="modal-title">Nova Candidatura</h2>
+      <!-- Formulário para cadastro de candidatura -->
+      <form id="application-form" novalidate>
+        <div class="form-group">
+          <label for="form-titulo">Título da Vaga *</label>
+          <input id="form-titulo" name="titulo" type="text" placeholder="Ex.: Engenheira de Software Júnior" required />
+        </div>
+        <div class="form-group">
+          <label for="form-empresa">Empresa *</label>
+          <input id="form-empresa" name="empresa" type="text" placeholder="Ex.: Tech Solutions" required />
+        </div>
+        <!-- Botão para salvar a candidatura -->
+        <button type="submit" class="form-submit-btn cta-primary">Salvar Candidatura</button>
+        <!-- Botão para cancelar e fechar o modal -->
+        <button type="button" class="btn-ghost modal-cancel-btn">Cancelar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Área para exibir mensagens de feedback para o usuário -->
+  <div id="message-box" role="status" aria-live="polite"></div>
+
+  <!-- Widget de acessibilidade VLibras (Libras) -->
+  <div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div>
+  </div>
+  <!-- Script do VLibras para tradução para Libras -->
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+  <script> new window.VLibras.Widget('https://vlibras.gov.br/app'); </script>
+
+  <!-- Arquivo JavaScript principal da aplicação -->
+  <script type="module" src="assets/js/script.js"></script>
+</body>
+</html>
